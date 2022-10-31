@@ -8,7 +8,7 @@ const vaciarCarritoBtn = document.querySelector('#vaciar-carrito'); //idem
 const numeroCant = document.querySelector('#numeroCant'); //idem
 
 
-      let articulosCarrito = []
+      var articulosCarrito = []
 
       class Producto { 
           constructor(imagen, titulo,precio,id, cantidad) {
@@ -64,12 +64,49 @@ function leerDatosProd(producto) {
      //      cantidad: 1 
 
          let imagen = producto.querySelector('img').src;
-         let titulo = producto.querySelector('h4').textContent;
-         let precio =  producto.querySelector('.precio span span').textContent; 
+         let titulo = producto.querySelector('h4').textContent; 
+         let precio = 0;     
          let id = producto.querySelector('a').getAttribute('data-id');
          let cantidad= 1;
-        let numer = 0;
+        let numer = 0;  
+       
 
+     if (id == 1) {
+          precio = precio+ 41440;
+     }
+     if (id == 2) {
+          precio = 11658;
+     }
+        if (id == 3) {
+          precio = 23600;
+     }
+        if (id == 4) {
+          precio = 85700;
+     }
+        if (id == 5) {
+          precio = 22499;
+     } 
+       if (id == 6) {
+          precio = 71402;
+     }
+        if (id == 7) {
+          precio = 96950;
+     }
+        if (id == 8) {
+          precio = 175300;
+     }
+        if (id == 9) {
+          precio = 8810;
+     } 
+       if (id == 10) {
+          precio = 17262;
+     }
+        if (id == 11) {
+          precio = 19200;
+     } 
+       if (id == 12) {
+          precio = 27451;
+     }
 
      let infoProducto = new Producto(imagen, titulo, precio, id, cantidad); //##  llamamos a la clase "Producto"
 
@@ -92,7 +129,7 @@ function leerDatosProd(producto) {
           articulosCarrito = [...articulosCarrito, infoProducto];
      }
    
-     articulosCarrito.map( producto => { //   ##   usamos map para recorrer producto y sumar la cantridad al contador 
+     articulosCarrito.forEach( producto => { //   ##   usamos foreach para recorrer producto y sumar la cantridad al contador (usamos producto que fue creado antes)
           if( producto.id === infoProducto.id ) {
                producto.cantidad; 
               numer = numer + producto.cantidad ;
@@ -101,12 +138,17 @@ function leerDatosProd(producto) {
                numer = numer + producto.cantidad ;
                 return producto;
         }})
-
+     
+     
+     
+  
 
      // console.log(articulosCarrito)
    descuento();  
 contador(numer); 
  carritoHTML();
+ sumarTotal(articulosCarrito);
+
 }
 
 // Elimina el curso del carrito en el DOM
@@ -126,6 +168,34 @@ function eliminarProducto(e) {
    
 }
 
+
+
+function sumarTotal(articulosCarrito){
+
+     let precios = articulosCarrito.map( producto => { // #con el map creamos un nuevo array que contiene solo los precios 
+        return producto.cantidad * producto.precio ; 
+     })
+
+     let total = 0;
+     precios.forEach(precio =>{
+         total = total + precio;
+     })
+     
+     articulosCarrito.forEach(producto =>{
+               if(producto.cantidad >= 3){
+                  total = total - total*15/100;
+                  return total;
+               }else{
+                    return producto;
+               }
+          })
+    //reiniciamos el carrito sin el usar la funcion vaciar carrito para no vaciar el array
+    mostrarTotal(total);//llamamos a la funcion para inytectar el html
+   
+          
+}
+
+
 // Muestra el curso seleccionado en el Carrito
 function carritoHTML() {
     
@@ -143,7 +213,7 @@ function carritoHTML() {
                <td>${producto.cantidad} </td>
                <td></td>
                <td>
-                    <a href="#" onclick="desaaprecerDescuento();" class="borrar-producto" data-id="${producto.id}">X</a>
+                    <a href="#" onclick="desaprecerDescuento();" class="borrar-producto" data-id="${producto.id}">X</a>
                </td>
           `;
           contenedorCarrito.appendChild(row);
@@ -160,7 +230,7 @@ function vaciarCarrito() {
      articulosCarrito = []; //vaciamos el array
      contenedorCarrito.innerHTML = '';
      desaaprecerDescuento();
-   console.log(articulosCarrito) ;
+
 
      // forma rapida (recomendada)
 }
@@ -188,7 +258,6 @@ function descuento() {// usamos el some para encontrar el numero 3 en valor.cant
      return result;
 });
 
-console.log(desc)
 if(desc == true ){
     
 
@@ -197,9 +266,24 @@ if(desc == true ){
 
 }}
 
-function desaaprecerDescuento() {
+function desaprecerDescuento() {
 
      document.getElementById("descuento").style.display = 'none';
 
-   }
+ }
+
+function mostrarTotal(total){ //mostramos el total
+     console.log(total)
+const row = document.createElement('tr');
+          row.innerHTML = `
+               <td></td>
+               <td></td>
+               <td></td>
+               <td></td>
+               <td><h5>$${total}</h5></td>
+               <td></td>
+          `;
+          contenedorCarrito.appendChild(row);
+          
+}
 
