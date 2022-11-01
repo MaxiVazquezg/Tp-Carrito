@@ -5,16 +5,17 @@ const carrito = document.querySelector('#carrito'); // metodo primer elemento de
 const listaProductos = document.querySelector('#lista-producto');//idem
 const contenedorCarrito = document.querySelector('#lista-carrito tbody');//idem
 const vaciarCarritoBtn = document.querySelector('#vaciar-carrito'); //idem
-const numeroCant = document.querySelector('#numeroCant'); //idem
+const numeroCant = document.querySelector('#numeroCant'); //#
 
 
       var articulosCarrito = []
 
-      class Producto { 
-          constructor(imagen, titulo,precio,id, cantidad) {
+      class Producto { //#
+          constructor(imagen, titulo,precio,precio2,id, cantidad) {
               this.imagen = imagen; 
               this.titulo = titulo;
               this.precio = precio;
+              this.precio2 = precio2;
               this.id = id;
                this.cantidad = cantidad;
              
@@ -65,12 +66,13 @@ function leerDatosProd(producto) {
 
          let imagen = producto.querySelector('img').src;
          let titulo = producto.querySelector('h4').textContent; 
-         let precio = 0;     
+         let precio = 0;
+         let precio2= 0;    //despues la usamos para mostrar el total individual de cada compra  
          let id = producto.querySelector('a').getAttribute('data-id');
          let cantidad= 1;
         let numer = 0;  
        
-
+     //#
      if (id == 1) {
           precio = precio+ 41440;
      }
@@ -108,47 +110,42 @@ function leerDatosProd(producto) {
           precio = 27451;
      }
 
-     let infoProducto = new Producto(imagen, titulo, precio, id, cantidad); //##  llamamos a la clase "Producto"
+     let infoProducto = new Producto(imagen, titulo, precio,precio2, id, cantidad); //# llamamos a la clase "Producto"
 
      if( articulosCarrito.some( producto => producto.id === infoProducto.id ) ) { 
           const productos = articulosCarrito.map( producto => {
                if( producto.id === infoProducto.id ) {
                     producto.cantidad++ ; 
-                  
+                 
                    return producto;
                 } else {
                     
                      return producto;
-
              }
           })
-        
-          articulosCarrito = [...productos];//tarea ver que hace esta linea
+          articulosCarrito = [...productos];//copia el array productos
          
      }  else {
-          articulosCarrito = [...articulosCarrito, infoProducto];
+          articulosCarrito = [...articulosCarrito, infoProducto]; //copia su propio array y agrega el objeto infoproducto
      }
-   
-     articulosCarrito.forEach( producto => { //   ##   usamos foreach para recorrer producto y sumar la cantridad al contador (usamos producto que fue creado antes)
+
+     
+
+     articulosCarrito.forEach( producto => { // #  usamos foreach para recorrer producto y sumar la cantridad al contador (usamos producto que fue creado antes)
           if( producto.id === infoProducto.id ) {
-               producto.cantidad; 
               numer = numer + producto.cantidad ;
               return producto;
            } else {
                numer = numer + producto.cantidad ;
                 return producto;
         }})
-     
-     
-     
-  
 
-     // console.log(articulosCarrito)
-   descuento();  
-contador(numer); 
- carritoHTML();
- sumarTotal(articulosCarrito);
-
+       
+ cambiarPrecio(articulosCarrito)
+ contador(numer); //#
+ descuento(); //#
+ carritoHTML(); 
+ //#
 }
 
 // Elimina el curso del carrito en el DOM
@@ -170,26 +167,35 @@ function eliminarProducto(e) {
 
 
 
-function sumarTotal(articulosCarrito){
+function sumarTotal(articulosCarrito){ //#
+     
 
      let precios = articulosCarrito.map( producto => { // #con el map creamos un nuevo array que contiene solo los precios 
-        return producto.cantidad * producto.precio ; 
+       
+          return producto.precio * producto.cantidad ;
+
      })
 
+
+    console.log(precios);
+
      let total = 0;
-     precios.forEach(precio =>{
-         total = total + precio;
+
+     precios.forEach(prec =>{
+         total = total + prec;
+         
      })
      
-     articulosCarrito.forEach(producto =>{
-               if(producto.cantidad >= 3){
-                  total = total - total*15/100;
+     articulosCarrito.forEach(producto => {
+               if(producto.cantidad > 2){
+                    total = total - (total*0.15);
                   return total;
                }else{
                     return producto;
                }
           })
-    //reiniciamos el carrito sin el usar la funcion vaciar carrito para no vaciar el array
+         
+
     mostrarTotal(total);//llamamos a la funcion para inytectar el html
    
           
@@ -199,9 +205,9 @@ function sumarTotal(articulosCarrito){
 // Muestra el curso seleccionado en el Carrito
 function carritoHTML() {
     
-     
-     contenedorCarrito.innerHTML = ''; //reiniciamos el carrito sin el usar la funcion vaciar carrito para no vaciar el array
+     contenedorCarrito.innerHTML = ''; // reiniciamos el carrito sin el usar la funcion vaciar carrito para no vaciar el array
    
+    
      articulosCarrito.forEach(producto => {
           const row = document.createElement('tr');
           row.innerHTML = `
@@ -209,7 +215,7 @@ function carritoHTML() {
                     <img src="${producto.imagen}" width=100>
                </td>
                <td>${producto.titulo}</td>
-               <td>$${producto.precio}</td>
+               <td>$${producto.precio2}</td>
                <td>${producto.cantidad} </td>
                <td></td>
                <td>
@@ -219,23 +225,24 @@ function carritoHTML() {
           contenedorCarrito.appendChild(row);
 
           
+          
      });
-
+     sumarTotal(articulosCarrito);
 
 }
 
 // Elimina los cursos del carrito en el DOM
 function vaciarCarrito() { 
      // forma lenta
-     articulosCarrito = []; //vaciamos el array
+     articulosCarrito = []; // # vaciamos el array
      contenedorCarrito.innerHTML = '';
-     desaaprecerDescuento();
+     desaprecerDescuento();//#
 
 
      // forma rapida (recomendada)
 }
 
-function contador(numCantidad) {
+function contador(numCantidad) {//#
 
 this.numCantidad = numCantidad;
     
@@ -247,17 +254,21 @@ this.numCantidad = numCantidad;
           numeroCant.appendChild(row);         
 }
 
-function vaciarContador() { //vacia el contador
+function vaciarContador() { //# vacia el contador
    numeroCant.innerHTML=''
 }
 
-function descuento() {// usamos el some para encontrar el numero 3 en valor.cantidad
-  const desc = articulosCarrito.some(valor => { 
+function descuento() {// # usamos el some para encontrar el numero 3 en valor.cantidad
+  let desc = articulosCarrito.some(producto => { 
      let result = false;
-     result =  valor.cantidad == 3;
-     return result;
-});
-
+     if(producto.cantidad > 2){
+      result =  true;
+      return result;
+     }
+   
+    
+    
+})
 if(desc == true ){
     
 
@@ -266,13 +277,13 @@ if(desc == true ){
 
 }}
 
-function desaprecerDescuento() {
+function desaprecerDescuento() {//#
 
      document.getElementById("descuento").style.display = 'none';
 
  }
 
-function mostrarTotal(total){ //mostramos el total
+function mostrarTotal(total){ //# mostramos el total
      console.log(total)
 const row = document.createElement('tr');
           row.innerHTML = `
@@ -287,3 +298,13 @@ const row = document.createElement('tr');
           
 }
 
+function cambiarPrecio(articulosCarrito){//# mostramos el total individual de cada compra
+
+     let preciosCantidad = articulosCarrito.map( producto => { 
+          producto.precio2 = producto.precio * producto.cantidad;
+
+     })
+    articulosCarrito = [...preciosCantidad];
+
+
+}
