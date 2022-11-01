@@ -8,7 +8,7 @@ const vaciarCarritoBtn = document.querySelector('#vaciar-carrito'); //idem
 const numeroCant = document.querySelector('#numeroCant'); //#
 
 
-      var articulosCarrito = []
+      let articulosCarrito = []
 
       class Producto { //#
           constructor(imagen, titulo,precio,precio2,id, cantidad) {
@@ -17,7 +17,7 @@ const numeroCant = document.querySelector('#numeroCant'); //#
               this.precio = precio;
               this.precio2 = precio2;
               this.id = id;
-               this.cantidad = cantidad;
+              this.cantidad = cantidad;
              
           }}
 
@@ -74,7 +74,7 @@ function leerDatosProd(producto) {
        
      //#
      if (id == 1) {
-          precio = precio+ 41440;
+          precio = 41440;
      }
      if (id == 2) {
           precio = 11658;
@@ -126,7 +126,7 @@ function leerDatosProd(producto) {
           articulosCarrito = [...productos];//copia el array productos
          
      }  else {
-          articulosCarrito = [...articulosCarrito, infoProducto]; //copia su propio array y agrega el objeto infoproducto
+          articulosCarrito = [...articulosCarrito, infoProducto]; //copia su propio array y agrega el objeto infoproduct
      }
 
      
