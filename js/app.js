@@ -66,49 +66,49 @@ function leerDatosProd(producto) {
 
          let imagen = producto.querySelector('img').src;
          let titulo = producto.querySelector('h4').textContent; 
-         let precio = 0;
+         let precio = producto.querySelector('.precio span span').textContent;;
          let precio2= 0;    //despues la usamos para mostrar el total individual de cada compra  
          let id = producto.querySelector('a').getAttribute('data-id');
          let cantidad= 1;
         let numer = 0;  
        
-     //#
-     if (id == 1) {
-          precio = 41440;
-     }
-     if (id == 2) {
-          precio = 11658;
-     }
-        if (id == 3) {
-          precio = 23600;
-     }
-        if (id == 4) {
-          precio = 85700;
-     }
-        if (id == 5) {
-          precio = 22499;
-     } 
-       if (id == 6) {
-          precio = 71402;
-     }
-        if (id == 7) {
-          precio = 96950;
-     }
-        if (id == 8) {
-          precio = 175300;
-     }
-        if (id == 9) {
-          precio = 8810;
-     } 
-       if (id == 10) {
-          precio = 17262;
-     }
-        if (id == 11) {
-          precio = 19200;
-     } 
-       if (id == 12) {
-          precio = 27451;
-     }
+     //  # lo saco gracias a la funcion convertirPrecio()
+     // if (id == 1) {
+     //      precio = 41440;
+     // }
+     // if (id == 2) {
+     //      precio = 11658;
+     // }
+     //    if (id == 3) {
+     //      precio = 23600;
+     // }
+     //    if (id == 4) {
+     //      precio = 85700;
+     // }
+     //    if (id == 5) {
+     //      precio = 22499;
+     // } 
+     //   if (id == 6) {
+     //      precio = 71402;
+     // }
+     //    if (id == 7) {
+     //      precio = 96950;
+     // }
+     //    if (id == 8) {
+     //      precio = 175300;
+     // }
+     //    if (id == 9) {
+     //      precio = 8810;
+     // } 
+     //   if (id == 10) {
+     //      precio = 17262;
+     // }
+     //    if (id == 11) {
+     //      precio = 19200;
+     // } 
+     //   if (id == 12) {
+     //      precio = 27451;
+     // }
 
      let infoProducto = new Producto(imagen, titulo, precio,precio2, id, cantidad); //# llamamos a la clase "Producto"
 
@@ -172,7 +172,7 @@ function sumarTotal(articulosCarrito){ //#
 
      let precios = articulosCarrito.map( producto => { // #con el map creamos un nuevo array que contiene solo los precios 
        
-          return producto.precio * producto.cantidad ;
+          return convertirPrecio(producto.precio) * producto.cantidad ;
 
      })
 
@@ -195,9 +195,9 @@ function sumarTotal(articulosCarrito){ //#
                }
           })
          
-
+ if ( total != 0){ //if para que no me mustre el $0
     mostrarTotal(total);//llamamos a la funcion para inytectar el html
-   
+   }
           
 }
 
@@ -301,10 +301,16 @@ const row = document.createElement('tr');
 function cambiarPrecio(articulosCarrito){//# mostramos el total individual de cada compra
 
      let preciosCantidad = articulosCarrito.map( producto => { 
-          producto.precio2 = producto.precio * producto.cantidad;
+          producto.precio2 = convertirPrecio(producto.precio) * producto.cantidad;
 
      })
     articulosCarrito = [...preciosCantidad];
 
 
+}
+
+function convertirPrecio(moneda){// # funcion que mostro tiago 
+     let numero = moneda.replace('.',''); //le saca el punto
+     numero = parseFloat(numero); // convirte en un float al string
+     return numero;
 }
